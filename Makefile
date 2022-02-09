@@ -30,7 +30,7 @@ all: clean build
 
 .PHONY: build
 build:
-	$(GOBUILD) -ldflags "$(PackageFlags)" -o ./bin/$(BUILD_TARGET_SERVER) -v ./src/bnApp.go
+	$(GOBUILD) -ldflags "$(PackageFlags)" -o ./bin/$(BUILD_TARGET_SERVER) -v ./bnApp.go
 
 .PHONY: clean
 clean:
