@@ -6,7 +6,6 @@ import (
 	"github.com/MeshBoxFoundation/blockchain-core/src"
 
 	"github.com/ergo-services/ergo"
-	"github.com/ergo-services/ergo/etf"
 	"github.com/ergo-services/ergo/gen"
 	"github.com/ergo-services/ergo/node"
 )
@@ -22,32 +21,6 @@ var (
 
 	EnableRPC bool
 )
-
-type bnApp struct {
-	gen.Application
-}
-
-func (da *bnApp) Load(args ...etf.Term) (gen.ApplicationSpec, error) {
-	return gen.ApplicationSpec{
-		Name:        "bnApp",
-		Description: "bn Applicatoin",
-		Version:     "v.1.0",
-		Environment: map[string]interface{}{
-			"envName1": 123,
-			"envName2": "pom",
-		},
-		Children: []gen.ApplicationChildSpec{
-			gen.ApplicationChildSpec{
-				Child: &src.BnCoreSup{},
-				Name:  "bnCoreSup",
-			},
-		},
-	}, nil
-}
-
-func (da *bnApp) Start(process gen.Process, args ...etf.Term) {
-	fmt.Println("Application started!")
-}
 
 func init() {
 	flag.IntVar(&ListenRangeBegin, "listen_begin", 15151, "listen port range")
@@ -67,21 +40,25 @@ func main() {
 	}
 
 	// Initialize new node with given name, cookie, listening port range and epmd port
-	bnNode, _ := ergo.StartNode(NodeName, Cookie, opts)
+	node, _ := ergo.StartNode(NodeName, Cookie, opts)
 
-	// start application
-	if _, err := bnNode.ApplicationLoad(&bnApp{}); err != nil {
-		panic(err)
-	}
+	// Spawn supervisor process
+	process, _ := node.Spawn("demo_sup", gen.ProcessOptions{}, &src.BnCoreSup{})
 
-	appProcess, _ := bnNode.ApplicationStart("bnApp")
 	fmt.Println("Run erl shell:")
-	fmt.Printf("erl -name %s -setcookie %s\n", "erl-"+bnNode.Name(), Cookie)
+	fmt.Printf("erl -name %s -setcookie %s\n", "erl-"+node.Name(), Cookie)
 
 	fmt.Println("-----Examples that can be tried from 'erl'-shell")
-	fmt.Printf("gen_server:cast({%s,'%s'}, stop).\n", "bnServer01", bnNode.Name())
-	fmt.Printf("gen_server:call({%s,'%s'}, hello).\n", "bnServer01", bnNode.Name())
+	fmt.Printf("gen_server:cast({%s,'%s'}, stop).\n", "demoServer01", NodeName)
+	fmt.Printf("gen_server:call({%s,'%s'}, hello).\n", "demoServer01", NodeName)
+	fmt.Println("or...")
+	fmt.Printf("gen_server:cast({%s,'%s'}, stop).\n", "demoServer02", NodeName)
+	fmt.Printf("gen_server:call({%s,'%s'}, hello).\n", "demoServer02", NodeName)
+	fmt.Println("or...")
+	fmt.Printf("gen_server:cast({%s,'%s'}, stop).\n", "demoServer03", NodeName)
+	fmt.Printf("gen_server:call({%s,'%s'}, hello).\n", "demoServer03", NodeName)
 
-	appProcess.Wait()
-	bnNode.Stop()
+	process.Wait()
+	node.Stop()
+	node.Wait()
 }
