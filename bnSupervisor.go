@@ -49,14 +49,7 @@ func main() {
 	fmt.Printf("erl -name %s -setcookie %s\n", "erl-"+node.Name(), Cookie)
 
 	fmt.Println("-----Examples that can be tried from 'erl'-shell")
-	fmt.Printf("gen_server:cast({%s,'%s'}, stop).\n", "demoServer01", NodeName)
-	fmt.Printf("gen_server:call({%s,'%s'}, hello).\n", "demoServer01", NodeName)
-	fmt.Println("or...")
-	fmt.Printf("gen_server:cast({%s,'%s'}, stop).\n", "demoServer02", NodeName)
-	fmt.Printf("gen_server:call({%s,'%s'}, hello).\n", "demoServer02", NodeName)
-	fmt.Println("or...")
-	fmt.Printf("gen_server:cast({%s,'%s'}, stop).\n", "demoServer03", NodeName)
-	fmt.Printf("gen_server:call({%s,'%s'}, hello).\n", "demoServer03", NodeName)
+	fmt.Printf("gen_server:call({%s,'%s'}, hello).\n", "server", NodeName)
 
 	process.Wait()
 	node.Stop()
