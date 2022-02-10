@@ -1,2 +1,4 @@
+github.com/MeshBoxFoundation/blockchain-core v0.0.0-20220210052907-b04d4e82ac77 h1:dhX86A9RA6Sb1DT6c67h/+ttQapeBLkGnOtNpwxc7bA=
+github.com/MeshBoxFoundation/blockchain-core v0.0.0-20220210052907-b04d4e82ac77/go.mod h1:o28QSqvel2iyhxOxm2cFIyH86y/ETjbcBAWoYYZZR6Y=
 github.com/ergo-services/ergo v1.999.202 h1:ifPlBs0zMR/31tvh4ypw4SAdip5kErJZDsk8FqHGviI=
 github.com/ergo-services/ergo v1.999.202/go.mod h1:iQKxlBMaflSiCV8F+kVeCwwlJxjs78dTuiS8P/Bp/kk=

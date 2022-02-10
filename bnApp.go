@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/MeshBoxFoundation/blockchain-node/src"
+	"github.com/MeshBoxFoundation/blockchain-core/src"
 
 	"github.com/ergo-services/ergo"
 	"github.com/ergo-services/ergo/etf"
@@ -34,16 +34,12 @@ func (da *bnApp) Load(args ...etf.Term) (gen.ApplicationSpec, error) {
 		Version:     "v.1.0",
 		Environment: map[string]interface{}{
 			"envName1": 123,
-			"envName2": "Hello world",
+			"envName2": "pom",
 		},
 		Children: []gen.ApplicationChildSpec{
 			gen.ApplicationChildSpec{
-				Child: &src.BnSup{},
-				Name:  "bnSup",
-			},
-			gen.ApplicationChildSpec{
-				Child: &src.BnGenServ{},
-				Name:  "justbnGS",
+				Child: &src.BnCoreSup{},
+				Name:  "bnCoreSup",
 			},
 		},
 	}, nil
