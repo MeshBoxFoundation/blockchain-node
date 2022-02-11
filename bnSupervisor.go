@@ -40,16 +40,25 @@ func main() {
 	}
 
 	// Initialize new node with given name, cookie, listening port range and epmd port
-	node, _ := ergo.StartNode(NodeName, Cookie, opts)
+	node, err := ergo.StartNode(NodeName, Cookie, opts)
+	if err != nil {
+		panic(err)
+	}
 
 	// Spawn supervisor process
-	process, _ := node.Spawn("demo_sup", gen.ProcessOptions{}, &src.BnCoreSup{})
+	process, err := node.Spawn("bn_sup", gen.ProcessOptions{}, &src.BnCoreSup{})
+	if err != nil {
+		panic(err)
+	}
 
-	fmt.Println("Run erl shell:")
-	fmt.Printf("erl -name %s -setcookie %s\n", "erl-"+node.Name(), Cookie)
+	fmt.Println("spawned bn_sup")
 
-	fmt.Println("-----Examples that can be tried from 'erl'-shell")
-	fmt.Printf("gen_server:call({%s,'%s'}, hello).\n", "server", NodeName)
+	follower := &src.Follower{}
+	_, err = node.Spawn("follower", gen.ProcessOptions{MailboxSize: 10000}, follower)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("OK")
 
 	process.Wait()
 	node.Stop()
